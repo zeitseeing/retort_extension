@@ -1,0 +1,39 @@
+{
+    "name": "Retort AI",
+    "version": "0.1.0",
+    "description": "Automatically generate retorts on Twitter",
+    "permissions": ["tabs", "scripting", "storage"],
+    "host_permissions": ["https://*.twitter.com/*"],
+    "background": {
+      "service_worker": "background.js",
+      "type": "module"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://*.twitter.com/*"],
+        "js": ["contentScript.js"],
+        "css": ["css/styles.css"]
+      }
+    ],
+    "web_accessible_resources": [
+      {
+        "resources": [
+          "assets/retort.png"
+        ],
+        "matches": ["https://*.twitter.com/*"]
+      }
+    ],
+    "action": {
+      "default_icon": {
+        "16": "assets/retort.png",
+        "24": "assets/retort.png",
+        "32": "assets/retort.png"
+      },
+      "default_title": "Retort AI",
+      "default_popup": "popup.html"
+    },
+    "externally_connectable": {
+      "matches": ["https://*.retort.ai/*"]
+    },
+    "manifest_version": 3
+}
