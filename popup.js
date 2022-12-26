@@ -14,6 +14,10 @@ generateResponseButton.onclick = async function (e) {
     const tweetInput = document.getElementById("tweet_input");
     tweetInput.innerHTML = response.text;
 
-    // send the tweet content to backgorund.js
-    const backgroundResponse = await chrome.runtime.sendMessage({message: response.text});
+    // send the tweet content to background.js
+    const backgroundResponse = await chrome.runtime.sendMessage({input: response.text});
+
+    // print response from AI to extension popup
+    const retortAiOutput = document.getElementById("retort_ai_output");
+    retortAiOutput.innerHTML = backgroundResponse;
 };
