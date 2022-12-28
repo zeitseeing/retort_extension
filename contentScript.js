@@ -12,8 +12,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     const screenNameMatches = text.match('screen_name":"(.*?)",.') // regex to find screenname screen_name":"(.*?)",.
     const screenName = screenNameMatches[1]
 
-    // send tweet content and screenName to popup.js
-    sendResponse({ text: textEl.textContent, screenName: screenName });
+    // get parent tweet url
+    const parentTweetUrl = document.querySelector("link[rel=canonical]").getAttribute("href")
+
+    // send tweet content, screenName, parentTweetUrl to popup.js
+    sendResponse({ text: textEl.textContent, screenName: screenName, parentTweetUrl: parentTweetUrl });
 });
 
 

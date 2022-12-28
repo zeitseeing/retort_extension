@@ -3,7 +3,7 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
 
   // send tweet to retort AI
-    postData('https://retort.onrender.com/generations', { input: request.input, screen_name: request.screenName })
+    postData('https://retort.onrender.com/generations', { input: request.input, screen_name: request.screenName, parent_tweet_url: request.parentTweetUrl })
       .then((data) => {
         console.log(data.generated_response); // JSON data parsed by `data.json()` call
         // send response from retort AI to popup
