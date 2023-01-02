@@ -15,9 +15,3 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     // send tweet content, screenName, parentTweetUrl to popup.js
     sendResponse({ text: textEl.textContent, screenName: screenName, parentTweetUrl: parentTweetUrl });
 });
-
-
-(async () => {
-  const response = await chrome.runtime.sendMessage({greeting: "hello"});
-  // do something with response here, not outside the function
-})();
