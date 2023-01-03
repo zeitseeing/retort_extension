@@ -2,8 +2,8 @@
     "name": "Retort AI",
     "version": "0.1.0",
     "description": "Automatically generate responses on Twitter",
-    "permissions": ["storage"],
-    "host_permissions": ["https://*.twitter.com/*", "https://*.retort.ai/*"],
+    "permissions": [],
+    "host_permissions": ["https://*.retort.ai/*"],
     "background": {
       "service_worker": "background.js",
       "type": "module"
@@ -32,9 +32,6 @@
     "action": {
       "default_popup": "popup.html",
     "default_title": "Retort AI"
-    },
-    "externally_connectable": {
-      "matches": ["https://*.retort.ai/*"]
     },
     "manifest_version": 3
 }
