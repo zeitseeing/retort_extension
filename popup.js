@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {});
 
+// change icon to colored version on twitter.com
 chrome.declarativeContent.onPageChanged.removeRules(async () => {
   chrome.declarativeContent.onPageChanged.addRules([{
     conditions: [
@@ -36,23 +37,32 @@ generateResponseButton.onclick = async function (e) {
     // send message to contentScript
     const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
 
-    if (tab.url.match('https:\/\/*.twitter.com\/*')) {
-      const response = await chrome.tabs.sendMessage(tab.id, {message: "send me the tweet text content please"});
-        
-        // print the tweet content in the popup
-        const tweetInput = document.getElementById("tweet_input");
-        tweetInput.innerHTML = response.text;
+    try {
 
-        // send the tweet content, screenName and parentTweetUrl to background.js
-        const backgroundResponse = await chrome.runtime.sendMessage({input: response.text, screenName: response.screenName, parentTweetUrl: response.parentTweetUrl});
+        if (tab.url.match('https:\/\/*.twitter.com\/*')) {
+            const response = await chrome.tabs.sendMessage(tab.id, {message: "send me the tweet text content please"});
 
-        // print response from AI to extension popup
-        const retortAiOutput = document.getElementById("retort_ai_output");
-        retortAiOutput.innerHTML = backgroundResponse;
-    }
-    else {
-      const errorDiv = document.getElementById("errors");
-        errorDiv.innerHTML = "Select a tweet on twitter.com and generate a response to it. Refresh twitter.com if error persists. Contact me on @zeitseeing for questions."
-    }
+            // print the tweet content in the popup
+            const tweetInput = document.getElementById("tweet_input");
+            tweetInput.innerHTML = response.text;
 
+            // add response title
+            const responseTitle = document.getElementById("response_title");
+            responseTitle.innerHTML = "Response from Retort AI ✍️";
+
+            // send the tweet content, screenName and parentTweetUrl to background.js
+            const backgroundResponse = await chrome.runtime.sendMessage({input: response.text, screenName: response.screenName, parentTweetUrl: response.parentTweetUrl});
+
+            // print response from AI to extension popup
+            const retortAiOutput = document.getElementById("retort_ai_output");
+            retortAiOutput.innerHTML = backgroundResponse;
+        }
+        else {
+            const errorDiv = document.getElementById("errors");
+            errorDiv.innerHTML = "Select a tweet on twitter.com and generate a response to it. Refresh twitter.com if error persists. Contact me on @zeitseeing for questions."
+        }
+    } catch (e) {
+        const errorDiv = document.getElementById("errors");
+        errorDiv.innerHTML = "Please refresh the page (Cmd + R) and try again. " + e + " DM me @zeitseeing if error persists."
+    };
 };
