@@ -36,10 +36,7 @@ generateResponseButton.onclick = async function (e) {
     // send message to contentScript
     const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
 
-    console.log("before conditional");
-
     if (tab.url.match('https:\/\/*.twitter.com\/*')) {
-      console.log("yep, on twitter, so gonna send this");
       const response = await chrome.tabs.sendMessage(tab.id, {message: "send me the tweet text content please"});
         
         // print the tweet content in the popup
