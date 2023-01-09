@@ -5,7 +5,11 @@ const generateResponseButton = document.getElementById("generate_response_button
 generateResponseButton.onclick = async function (e) {
     // send message to contentScript
     const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
-    const response = await chrome.tabs.sendMessage(tab.id, {message: "send me the tweet text content please"});
+    let response;
+
+    if (tab.url.match('https:\/\/.*.twitter.com\/.*')) {
+      response = await chrome.tabs.sendMessage(tab.id, {message: "send me the tweet text content please"});
+    }
 
     // print the tweet content in the popup
     const tweetInput = document.getElementById("tweet_input");
