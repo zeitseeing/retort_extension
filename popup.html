@@ -3,24 +3,21 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
+    <link href="css/popup.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div class="container">
-      <div>
-        <div class="title" id="title">Retort AI - Automated Twitter responses</div>
+      <div class="title">retort.ai</div>
 
-        <div class="errors"></div>
+      <div id="errors"></div>
 
-        <button id="generate_response_button">Generate response to tweet</button>
+      <button class="button" id="generate_response_button">Generate response to tweet ✍️</button>
 
-        <p class="tweet" id="tweet_input"></p>
+      <p class="tweet" id="tweet_input"></p>
 
-        <p>Response from Retort AI</p>
-        <p class="tweet" id="retort_ai_output"></p>
-      </div>
+      <p>Response from Retort AI</p>
+      <p class="tweet" id="retort_ai_output"></p>
     </div>
-
-    <link href="css/popup.css" rel="stylesheet" type="text/css" />
     <script async type"text/javascript" src="popup.js"></script>
   </body>
 </html>
