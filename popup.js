@@ -1,5 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {});
 
+// Configure Honeybadger
+Honeybadger.configure({
+    apiKey: 'hbp_NZ2wBYKJSmIDIOZOAaqGASflsWGOtt49ZRxp',
+    environment: 'production',
+    revision: 'sha-256'
+});
+
 // change icon to colored version on twitter.com
 chrome.declarativeContent.onPageChanged.removeRules(async () => {
   chrome.declarativeContent.onPageChanged.addRules([{
@@ -53,6 +60,11 @@ generateResponseButton.onclick = async function (e) {
             // send the tweet content, screenName and parentTweetUrl to background.js
             const backgroundResponse = await chrome.runtime.sendMessage({input: response.text, screenName: response.screenName, parentTweetUrl: response.parentTweetUrl});
 
+            // For Honeybadger error reporting
+            Honeybadger.setContext({
+                user_id: response.screenName
+            });
+
             // print response from AI to extension popup
             const retortAiOutput = document.getElementById("retort_ai_output");
             retortAiOutput.innerHTML = backgroundResponse;
@@ -61,8 +73,9 @@ generateResponseButton.onclick = async function (e) {
             const errorDiv = document.getElementById("errors");
             errorDiv.innerHTML = "Select a tweet on twitter.com and generate a response to it. Refresh twitter.com if error persists. Contact me on @zeitseeing for questions."
         }
-    } catch (e) {
+    } catch (error) {
         const errorDiv = document.getElementById("errors");
-        errorDiv.innerHTML = "Please refresh the page (Cmd + R) and try again. " + e + " DM me @zeitseeing if error persists."
+        errorDiv.innerHTML = "Please refresh the page (Cmd + R) and try again. " + error + " DM me @zeitseeing if error persists."
+        Honeybadger.notify(error);
     };
 };
