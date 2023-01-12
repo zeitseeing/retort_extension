@@ -1,6 +1,6 @@
 {
     "name": "Retort AI",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Automatically generate responses on Twitter",
     "permissions": ["activeTab", "declarativeContent", "tabs"],
     "host_permissions": ["https://*.retort.ai/*"],
