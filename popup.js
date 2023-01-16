@@ -1,4 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {});
 
 // Configure Honeybadger
 Honeybadger.configure({
@@ -38,44 +37,46 @@ async function loadImageData(url) {
   return ctx.getImageData(0, 0, w, h);
 }
 
-const generateResponseButton = document.getElementById("generate_response_button");
+document.addEventListener("DOMContentLoaded", () => {
+  const generateResponseButton = document.getElementById("generate_response_button");
 
-generateResponseButton.onclick = async function (e) {
+  generateResponseButton.onclick = async function (e) {
     // send message to contentScript
     const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
 
     try {
 
-        if (tab.url.match('https:\/\/*.twitter.com\/*')) {
-            const response = await chrome.tabs.sendMessage(tab.id, {message: "send me the tweet text content please"});
+      if (tab.url.match('https:\/\/*.twitter.com\/*')) {
+        const response = await chrome.tabs.sendMessage(tab.id, {message: "send me the tweet text content please"});
 
-            // print the tweet content in the popup
-            const tweetInput = document.getElementById("tweet_input");
-            tweetInput.innerHTML = response.text;
+        // print the tweet content in the popup
+        const tweetInput = document.getElementById("tweet_input");
+        tweetInput.innerHTML = response.text;
 
-            // add response title
-            const responseTitle = document.getElementById("response_title");
-            responseTitle.innerHTML = "Response from Retort AI ✍️";
+        // add response title
+        const responseTitle = document.getElementById("response_title");
+        responseTitle.innerHTML = "Response from Retort AI ✍️";
 
-            // send the tweet content, screenName and parentTweetUrl to background.js
-            const backgroundResponse = await chrome.runtime.sendMessage({input: response.text, screenName: response.screenName, parentTweetUrl: response.parentTweetUrl});
+        // send the tweet content, screenName and parentTweetUrl to background.js
+        const backgroundResponse = await chrome.runtime.sendMessage({input: response.text, screenName: response.screenName, parentTweetUrl: response.parentTweetUrl});
 
-            // For Honeybadger error reporting
-            Honeybadger.setContext({
-                user_id: response.screenName
-            });
+        // For Honeybadger error reporting
+        Honeybadger.setContext({
+          user_id: response.screenName
+        });
 
-            // print response from AI to extension popup
-            const retortAiOutput = document.getElementById("retort_ai_output");
-            retortAiOutput.innerHTML = backgroundResponse;
-        }
-        else {
-            const errorDiv = document.getElementById("errors");
-            errorDiv.innerHTML = "Select a tweet on twitter.com and generate a response to it. Refresh twitter.com if error persists. Contact me on @zeitseeing for questions."
-        }
-    } catch (error) {
+        // print response from AI to extension popup
+        const retortAiOutput = document.getElementById("retort_ai_output");
+        retortAiOutput.innerHTML = backgroundResponse;
+      }
+      else {
         const errorDiv = document.getElementById("errors");
-        errorDiv.innerHTML = "Please refresh the page (Cmd + R) and try again. " + error + " DM me @zeitseeing if error persists."
-        Honeybadger.notify(error);
+        errorDiv.innerHTML = "Select a tweet on twitter.com and generate a response to it. Refresh twitter.com if error persists. Contact me on @zeitseeing for questions."
+      }
+    } catch (error) {
+      const errorDiv = document.getElementById("errors");
+      errorDiv.innerHTML = "Please refresh the page (Cmd + R) and try again. " + error + " DM me @zeitseeing if error persists."
+      Honeybadger.notify(error);
     };
-};
+  };
+});
