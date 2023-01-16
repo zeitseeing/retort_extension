@@ -5,9 +5,19 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     const textEl = replyToTweet.querySelector("div[data-testid=\"tweetText\"]");
 
     // get screename
-    const text = document.querySelectorAll('script')[1].text
-    const screenNameMatches = text.match('screen_name":"(.*?)",.') // regex to find screenname screen_name":"(.*?)",.
-    const screenName = screenNameMatches[1]
+    // find the script containing the screenname
+    const scripts = document.querySelectorAll('script');
+    const scriptContainingScreenName = Array.from(scripts).filter(script => script.text.startsWith("window.__INITIAL_STATE__"));
+
+    let screenName;
+
+    if (scriptContainingScreenName.length == 0) {
+      screenName = "handle not found"
+    }
+    else {
+      const scriptContent = scriptContainingScreenName[0].text
+      screenName = scriptContent.match('screen_name":"(.*?)",.')[1] // regex to find screenname screen_name":"(.*?)",.
+    }
 
     // get parent tweet url
     const parentTweetUrl = document.querySelector("link[rel=canonical]").getAttribute("href")
